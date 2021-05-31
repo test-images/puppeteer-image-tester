@@ -1,0 +1,8 @@
+/node_modules
+.vscode
+yarn.lock
+*.7z
+
+# machne-specific config for browsers' binaries
+# may leak usernames, OS, etc
+.profile,secret.js

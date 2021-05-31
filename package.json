@@ -1,0 +1,19 @@
+{
+  "name": "puppeteer-image-tester",
+  "version": "0.3.0",
+  "description": "screenshot images in puppeteer to test browsers' rendering",
+  "exports": "./capture-screenshots.js",
+  "author": "tomByrer",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=15"
+  },
+  "dependencies":{
+    "puppeteer-core": "^9.1.1"
+  },
+  "scripts":{
+    "start": "node browser-rendering"
+  }
+}
