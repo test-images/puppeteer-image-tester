@@ -3,13 +3,22 @@ import puppeteer from "puppeteer-core"
 import batches from "./avif-squoosh.config.js"
 import { BROWSERS } from "./.profile,secret.js"
 
-/*
-	MAIN
- */
-captureMultiScreenshots(
-  batches['avif_lossless'],
-  batches.meta.destRootFolder + batches['avif_lossless'].folders.destSub,
-)
+async function main(){
+	for (
+		let i = 1, // index 0 = meta, no tests
+			keyNames = Object.keys(batches),
+			curBatch = {};
+		i < keyNames.length;
+		++i
+	){
+		curBatch = batches[keyNames[i]]
+    captureMultiScreenshots(
+      curBatch,
+      batches.meta.destRootFolder + curBatch.folders.destSub,
+    )
+  }
+}
+main()
 
 
 async function captureMultiScreenshots(batch, dest) {
@@ -28,14 +37,15 @@ async function captureMultiScreenshots(batch, dest) {
   ){
     let browser = null;
     let fileIdx = 0
+    const destFolder = (batch.folders.browser_folders===true)
+      ? dest + batch.browsers[b] +'/'
+      : dest
+
     try {
       if (BROWSERS[batch.browsers[b]]===undefined){
         throw new Error(`Can not find "${batch.browsers[b]}" config in ".profile,secret.js"`)
       }
 
-      const destFolder = (batch.folders.browser_folders===true)
-        ? dest + batch.browsers[b] +'/'
-        : dest
       console.log(`Attempting to fill:`, destFolder);
       fs.mkdirSync(destFolder,{recursive:true})
 
@@ -71,7 +81,8 @@ async function captureMultiScreenshots(batch, dest) {
       if (browser) {
         await browser.close()
       }
-      console.log(`${(batch.files.length===fileIdx)?'🎉 All':'😔 Some'} ${fileIdx} screenshots in ${batch.browsers[b]} captured.`);
+      console.log(`${(batch.files.length===fileIdx)?'🎉 All':'😔 Some'}`, fileIdx, `screenshots in ${batch.browsers[b]} captured for
+${destFolder}.`);
     }
   }//end for browsers loop
 }
